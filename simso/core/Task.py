@@ -19,8 +19,8 @@ class TaskInfo(object):
 
     def __init__(self, name, identifier, task_type, abort_on_miss, period,
                  activation_date, n_instr, mix, stack_file, wcet, acet,
-                 et_stddev, deadline, base_cpi, followed_by,
-                 list_activation_dates, preemption_cost, data):
+                 et_stddev, deadline, base_cpi, followed_by, list_activation_dates, 
+                 preemption_cost, data, mc_attack_task, mc_victim_task):
         """
         :type name: str
         :type identifier: int
@@ -62,6 +62,10 @@ class TaskInfo(object):
         self.list_activation_dates = list_activation_dates
         self.data = data
         self.preemption_cost = preemption_cost
+
+        # Added for supporting mc attack simulation
+        self.mc_attack_task = mc_attack_task # bool value. True for attacker task, None for all others
+        self.mc_victim_task = mc_victim_task # bool value. True for victim task, None for all others
 
     @property
     def csdp(self):
