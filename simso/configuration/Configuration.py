@@ -73,7 +73,8 @@ class Configuration(object):
 
         # Add support for criticality levels
         self.criticality_levels = 0
-        self.criticality_exec_distributions = []
+        self.criticality_exec_distributions = [] # Note distribution is amount of 
+                                                 # additional exec time to be added 
             
         self.calc_penalty_cache()
         self._set_filename(filename)
