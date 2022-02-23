@@ -70,6 +70,11 @@ class Configuration(object):
             self.proc_data_fields = {}
             self.memory_access_time = 100
             self._scheduler_info = SchedulerInfo()
+
+        # Add support for criticality levels
+        self.criticality_levels = 0
+        self.criticality_exec_distributions = []
+            
         self.calc_penalty_cache()
         self._set_filename(filename)
 
@@ -276,6 +281,23 @@ class Configuration(object):
         SchedulerInfo object.
         """
         return self._scheduler_info
+
+    # Add support for criticality levels
+    @property
+    def num_criticality_levels(self):
+        return self.criticality_levels
+    
+    @num_criticality_levels.setter
+    def num_criticality_levels(self, num_levels):
+        self.criticality_levels = num_levels
+
+    @property
+    def criticality_level_execution_distribution(self):
+        return self.criticality_exec_distributions
+    
+    @criticality_level_execution_distribution.setter
+    def criticality_level_execution_distribution(self, distribution):
+        self.criticality_exec_distributions = distribution
 
     def add_task(self, name, identifier, task_type="Periodic",
                  abort_on_miss=True, period=10, activation_date=0,
