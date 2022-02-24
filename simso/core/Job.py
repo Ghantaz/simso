@@ -45,6 +45,9 @@ class Job(Process):
         self._etm = etm
         self._was_running_on = task.cpu
 
+        # Support for mixed criticality execution time
+        self.current_level_wcet = None
+
         self._on_activate()
 
         self.context_ok = True  # The context is ready to be loaded.
@@ -243,7 +246,16 @@ class Job(Process):
         Worst-Case Execution Time in milliseconds.
         Equivalent to ``self.task.wcet``.
         """
-        return self._task.wcet
+        if(self.current_level_wcet == None):    # Fresh job
+            return self._task.wcet
+        else:
+            return self.current_level_wcet
+
+    # Add support for modifying execution time by the scheduler
+    # This is for supporting mixed criticality
+    @wcet.setter
+    def wcet(self, new_wcet):
+        self.current_level_wcet = new_wcet
 
     @property
     def activation_date(self):
