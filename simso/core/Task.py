@@ -20,7 +20,8 @@ class TaskInfo(object):
     def __init__(self, name, identifier, task_type, abort_on_miss, period,
                  activation_date, n_instr, mix, stack_file, wcet, acet,
                  et_stddev, deadline, base_cpi, followed_by, list_activation_dates, 
-                 preemption_cost, data, mc_attack_task, mc_victim_task):
+                 preemption_cost, data, mc_attack_task, mc_victim_task, 
+                 criticality_exec_distributions):
         """
         :type name: str
         :type identifier: int
@@ -66,7 +67,8 @@ class TaskInfo(object):
         # Added for supporting mc attack simulation
         self.mc_attack_task = mc_attack_task # bool value. True for attacker task, None for all others
         self.mc_victim_task = mc_victim_task # bool value. True for victim task, None for all others
-
+        self.criticality_exec_distributions = criticality_exec_distributions # distribution to be applied
+                                                                             # based on criticality level
     @property
     def csdp(self):
         """

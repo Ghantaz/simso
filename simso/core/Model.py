@@ -8,6 +8,7 @@ from simso.core.etm import execution_time_models
 from simso.core.Logger import Logger
 from simso.core.results import Results
 
+MC_SWITCH = 1
 
 class Model(Simulation):
     """
@@ -32,7 +33,14 @@ class Model(Simulation):
         proc_info_list = configuration.proc_info_list
         self._cycles_per_ms = configuration.cycles_per_ms
         self.scheduler = configuration.scheduler_info.instantiate(self)
-
+        
+        # MC related modeling. Shut this off if you dont want it anymore
+        if(MC_SWITCH == 1):
+            self.scheduler.num_criticality_levels = configuration.num_criticality_levels
+            self.scheduler.criticality_level_execution_distribution = configuration.criticality_level_execution_distribution
+            self.scheduler.current_criticality_level = 1
+            print("Set scheduler criticality levels and current level is " + str(self.scheduler.current_criticality_level))
+        
         try:
             self._etm = execution_time_models[configuration.etm](
                 self, len(proc_info_list)

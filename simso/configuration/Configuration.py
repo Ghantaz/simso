@@ -73,8 +73,8 @@ class Configuration(object):
 
         # Add support for criticality levels
         self.criticality_levels = 0
-        self.criticality_exec_distributions = [] # Note distribution is amount of 
-                                                 # additional exec time to be added 
+        self.criticality_exec_distributions = None # Note distribution is amount of 
+                                                   # additional exec time ratio to be added 
             
         self.calc_penalty_cache()
         self._set_filename(filename)
@@ -316,7 +316,8 @@ class Configuration(object):
                         activation_date, n_instr, mix,
                         (stack_file, self.cur_dir), wcet, acet, et_stddev,
                         deadline, base_cpi, followed_by, list_activation_dates,
-                        preemption_cost, data, mc_attack_task, mc_victim_task)
+                        preemption_cost, data, mc_attack_task, mc_victim_task,
+                        self.criticality_exec_distributions)
         self.task_info_list.append(task)
         return task
 

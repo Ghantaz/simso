@@ -147,6 +147,11 @@ class Scheduler(object):
         self.data = scheduler_info.data
         self.monitor = Monitor(name="MonitorScheduler", sim=sim)
 
+        # MC related stuff
+        self.num_criticality_levels = 0
+        self.current_criticality_level = 0
+        self.criticality_level_execution_distribution = []
+
     def init(self):
         """
         This method is called when the system is ready to run. This method
@@ -242,6 +247,14 @@ class Scheduler(object):
     def monitor_end_terminate(self, cpu):
         self.monitor.observe(SchedulerEndTerminateEvent(cpu))
 
+    def get_current_criticality_level(self):
+        return self.current_criticality_level
+
+    def set_current_criticality_level(self, new_level):
+        self.current_criticality_level = new_level
+
+    def get_num_criticality_levels(self):
+        return self.num_criticality_levels
 
 def get_schedulers():
     modules = []
