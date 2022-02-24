@@ -41,6 +41,9 @@ class Model(Simulation):
             self.scheduler.current_criticality_level = 1
             print("Set scheduler criticality levels and current level is " + str(self.scheduler.current_criticality_level))
         
+        # Attack cost modifier for simulating attacks on victim tasks
+        self.attack_cost_multiplier = configuration.attack_cost_multiplier
+
         try:
             self._etm = execution_time_models[configuration.etm](
                 self, len(proc_info_list)

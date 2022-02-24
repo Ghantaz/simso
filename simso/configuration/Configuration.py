@@ -75,6 +75,9 @@ class Configuration(object):
         self.criticality_levels = 0
         self.criticality_exec_distributions = None # Note distribution is amount of 
                                                    # additional exec time ratio to be added 
+        
+        # Add attack multiplier
+        self.attack_cost_multiplier = 0
             
         self.calc_penalty_cache()
         self._set_filename(filename)
