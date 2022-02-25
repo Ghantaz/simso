@@ -43,6 +43,10 @@ class Model(Simulation):
         
         # Attack cost modifier for simulating attacks on victim tasks
         self.attack_cost_multiplier = configuration.attack_cost_multiplier
+        self.average_exec_ratio = configuration.average_exec_ratio
+
+        # Target system criticality level for success
+        self.target_criticality_level = configuration.target_criticality_level
 
         try:
             self._etm = execution_time_models[configuration.etm](

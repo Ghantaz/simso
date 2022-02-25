@@ -44,6 +44,11 @@ class WCET(AbstractExecutionTimeModel):
         wcet_cycles = int(job.wcet * self.sim.cycles_per_ms)
         return int(wcet_cycles - self.get_executed(job))
 
+    # Execution time remaining within this level
+    def get_current_level_ret(self, job):
+        wcet_cycles = int(job.current_level_wcet * self.sim.cycles_per_ms)
+        return int(wcet_cycles - self.get_executed(job))
+
     def update(self):
         for job in list(self.on_execute_date.keys()):
             self.update_executed(job)

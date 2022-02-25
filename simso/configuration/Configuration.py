@@ -78,6 +78,10 @@ class Configuration(object):
         
         # Add attack multiplier
         self.attack_cost_multiplier = 0
+
+        # Add average exec time multiplier
+        self.average_exec_ratio = 1
+        self.target_criticality_level = 0
             
         self.calc_penalty_cache()
         self._set_filename(filename)

@@ -46,7 +46,18 @@ class Job(Process):
         self._was_running_on = task.cpu
 
         # Support for mixed criticality execution time
+        self.current_wcet = None
         self.current_level_wcet = None
+
+        # Allow applying attack. Set to True on preempt. 
+        # Made False the first time an attack takes place
+        self.apply_attack = False
+
+        # Scheduler has updated the wcet and has determined 
+        # criticality change will take place due to this job
+        # BIG ASSUMPTION - ONLY ONE VICTIM JOB FOR NOW
+        # HANDLE THIS CLEANLY FOR OTHER JOBS
+        self.impending_up_level = False 
 
         self._on_activate()
 
@@ -69,6 +80,8 @@ class Job(Process):
         self._etm.on_execute(self)
         if self._is_preempted:
             self._is_preempted = False
+        if self.apply_attack:
+            self.apply_attack = False
 
         self.cpu.was_running = self
 
@@ -85,6 +98,7 @@ class Job(Process):
         self._on_stop_exec()
         self._etm.on_preempted(self)
         self._is_preempted = True
+        self.apply_attack = True
         self._was_running_on = self.cpu
 
         self._monitor.observe(JobEvent(self, JobEvent.PREEMPTED))
@@ -246,16 +260,16 @@ class Job(Process):
         Worst-Case Execution Time in milliseconds.
         Equivalent to ``self.task.wcet``.
         """
-        if(self.current_level_wcet == None):    # Fresh job
+        if(self.current_wcet == None):    # Fresh job
             return self._task.wcet
         else:
-            return self.current_level_wcet
+            return self.current_wcet
 
     # Add support for modifying execution time by the scheduler
     # This is for supporting mixed criticality
     @wcet.setter
     def wcet(self, new_wcet):
-        self.current_level_wcet = new_wcet
+        self.current_wcet = new_wcet
 
     @property
     def activation_date(self):
@@ -263,6 +277,23 @@ class Job(Process):
         Activation date in milliseconds for this job.
         """
         return self._activation_date
+
+    # Current criticality level execution time
+    # Needed to detect overrun
+    
+    @property
+    def this_level_wcet(self):
+        '''
+        Current level execution time. Saved for posterity
+        '''
+        if(self.current_level_wcet ==  None): # Fresh Job
+            print("ERR! This should never have been called before being set")
+            exit(-1)
+        return self.current_level_wcet
+
+    @this_level_wcet.setter
+    def this_level_wcet(self, new_level_wcet):
+        self.current_level_wcet = new_level_wcet
 
     @property
     def absolute_deadline(self):
@@ -303,16 +334,28 @@ class Job(Process):
             # Wait an execute order.
             yield passivate, self
 
-            # Execute the job.
+            # Execute the job.
             if not self.interrupted():
                 self._on_execute()
                 # ret is a duration lower than the remaining execution time.
                 ret = self._etm.get_ret(self)
+                current_level_ret = self._etm.get_current_level_ret(self)
 
                 while ret > 0:
-                    yield hold, self, int(ceil(ret))
-
+                    if(self.impending_up_level):
+                        yield hold, self, int(ceil(current_level_ret))
+                    else:
+                        yield hold, self, int(ceil(ret))
                     if not self.interrupted():
+                        # Yield op completed. Check which yield was used
+                        # If impending one, then let the scheduler know 
+                        # That criticality change must occur
+                        # MODIFY ARCHITECTURE FOR MULTIPLE VICTIM JOBS
+                        if(self.impending_up_level):
+                            print("Job "+self.name + " now informing scheduler of criticality change")
+                            self.impending_up_level = False
+                            self.sim.scheduler.up_level = True
+                        
                         # If executed without interruption for ret cycles.
                         ret = self._etm.get_ret(self)
                     else:
