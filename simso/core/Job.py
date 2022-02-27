@@ -352,7 +352,7 @@ class Job(Process):
                         # That criticality change must occur
                         # MODIFY ARCHITECTURE FOR MULTIPLE VICTIM JOBS
                         if(self.impending_up_level):
-                            print("Job "+self.name + " now informing scheduler of criticality change")
+                            #print("Job "+self.name + " now informing scheduler of criticality change")
                             self.impending_up_level = False
                             self.sim.scheduler.up_level = True
                         

@@ -39,7 +39,7 @@ class Model(Simulation):
             self.scheduler.num_criticality_levels = configuration.num_criticality_levels
             self.scheduler.criticality_level_execution_distribution = configuration.criticality_level_execution_distribution
             self.scheduler.current_criticality_level = 1
-            print("Set scheduler criticality levels and current level is " + str(self.scheduler.current_criticality_level))
+            #print("Set scheduler criticality levels and current level is " + str(self.scheduler.current_criticality_level))
         
         # Attack cost modifier for simulating attacks on victim tasks
         self.attack_cost_multiplier = configuration.attack_cost_multiplier
@@ -47,6 +47,9 @@ class Model(Simulation):
 
         # Target system criticality level for success
         self.target_criticality_level = configuration.target_criticality_level
+
+        # Attack pass flag 
+        self.passed_test = False
 
         try:
             self._etm = execution_time_models[configuration.etm](
