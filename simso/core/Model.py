@@ -45,6 +45,10 @@ class Model(Simulation):
         self.attack_cost_multiplier = configuration.attack_cost_multiplier
         self.average_exec_ratio = configuration.average_exec_ratio
 
+        # Suicide stuff
+        self.attacker_suicide_level = configuration.attacker_suicide_level
+        self.enable_suicide = configuration.enable_suicide
+
         # Target system criticality level for success
         self.target_criticality_level = configuration.target_criticality_level
 

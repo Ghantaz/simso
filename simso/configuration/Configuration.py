@@ -76,8 +76,10 @@ class Configuration(object):
         self.criticality_exec_distributions = None # Note distribution is amount of 
                                                    # additional exec time ratio to be added 
         
-        # Add attack multiplier
+        # Attack related stuff
         self.attack_cost_multiplier = 0
+        self.attacker_suicide_level = 0
+        self.enable_suicide = False
 
         # Add average exec time multiplier
         self.average_exec_ratio = 1
