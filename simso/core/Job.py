@@ -375,7 +375,7 @@ class Job(Process):
                             self.impending_up_level = False
                             #self.sim.scheduler.up_level = True
                             self._on_criticality_change()
-                            print("Job "+self.name + " Crit change waiting for go ahead")
+                            #print("Job "+self.name + " Crit change waiting for go ahead")
                             self._on_self_preempted()
                             self.interruptReset()
                             break
