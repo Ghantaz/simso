@@ -12,6 +12,7 @@ TERMINATE = 3
 TIMER = 4
 PREEMPT = 5
 SPEED = 6
+CRIT_SIGNAL = 7
 
 
 class ProcInfo(object):
@@ -91,6 +92,9 @@ class Processor(Process):
         self._evts.append((PREEMPT,))
         self._running = job
 
+    def criticality_signal(self):
+        self._evts.append((CRIT_SIGNAL,))
+
     def timer(self, timer):
         self._evts.append((TIMER, timer))
 
@@ -169,6 +173,9 @@ class Processor(Process):
                     job.context_ok = True
 
             evt = self._evts.popleft()
+            if evt[0] == CRIT_SIGNAL:
+                self.sched.criticality_change()
+
             if evt[0] == RESCHED:
                 if any(x[0] != RESCHED for x in self._evts):
                     self._evts.append(evt)

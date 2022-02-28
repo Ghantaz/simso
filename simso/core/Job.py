@@ -105,6 +105,22 @@ class Job(Process):
         self._sim.logger.log(self.name + " Preempted! ret: " +
                              str(self.interruptLeft), kernel=True)
 
+
+    def _on_self_preempted(self):
+        self._on_stop_exec()
+        self._etm.on_preempted(self)
+        self._is_preempted = True
+        self.apply_attack = True
+        self._was_running_on = self.cpu
+
+        self._monitor.observe(JobEvent(self, JobEvent.PREEMPTED))
+        self._sim.logger.log(self.name + " Self Preempted! ret: " +
+                             str(self.interruptLeft), kernel=True)
+
+
+    def _on_criticality_change(self):
+        self._task.cpu.criticality_signal()
+
     def _on_terminated(self):
         self._on_stop_exec()
         self._etm.on_terminated(self)
@@ -341,6 +357,9 @@ class Job(Process):
                 ret = self._etm.get_ret(self)
                 current_level_ret = self._etm.get_current_level_ret(self)
 
+                if(self.wcet > self.current_level_wcet):
+                    self.impending_up_level = True
+
                 while ret > 0:
                     if(self.impending_up_level):
                         yield hold, self, int(ceil(current_level_ret))
@@ -354,7 +373,12 @@ class Job(Process):
                         if(self.impending_up_level):
                             #print("Job "+self.name + " now informing scheduler of criticality change")
                             self.impending_up_level = False
-                            self.sim.scheduler.up_level = True
+                            #self.sim.scheduler.up_level = True
+                            self._on_criticality_change(self)
+                            print("Job "+self.name + " CRIT CHANGE WAITING FOR GO AHEAD")
+                            self._on_self_preempted()
+                            self.interruptReset()
+                            break
                         
                         # If executed without interruption for ret cycles.
                         ret = self._etm.get_ret(self)
