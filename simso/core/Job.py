@@ -55,9 +55,7 @@ class Job(Process):
 
         # Scheduler has updated the wcet and has determined 
         # criticality change will take place due to this job
-        # BIG ASSUMPTION - ONLY ONE VICTIM JOB FOR NOW
-        # HANDLE THIS CLEANLY FOR OTHER JOBS
-        self.impending_up_level = False 
+        self.impending_up_level = False
 
         self._on_activate()
 
@@ -119,7 +117,7 @@ class Job(Process):
 
 
     def _on_criticality_change(self):
-        self._task.cpu.criticality_signal()
+        self._task.cpu.criticality_signal(self)
 
     def _on_terminated(self):
         self._on_stop_exec()
@@ -358,6 +356,7 @@ class Job(Process):
                 current_level_ret = self._etm.get_current_level_ret(self)
 
                 if(self.wcet > self.current_level_wcet):
+                    #print("Job" + self.name + " Up level")
                     self.impending_up_level = True
 
                 while ret > 0:
@@ -369,13 +368,14 @@ class Job(Process):
                         # Yield op completed. Check which yield was used
                         # If impending one, then let the scheduler know 
                         # That criticality change must occur
-                        # MODIFY ARCHITECTURE FOR MULTIPLE VICTIM JOBS
+                        # Fixed for multiple victims. Criticality level change is 
+                        # Instantaneous now
                         if(self.impending_up_level):
                             #print("Job "+self.name + " now informing scheduler of criticality change")
                             self.impending_up_level = False
                             #self.sim.scheduler.up_level = True
-                            self._on_criticality_change(self)
-                            print("Job "+self.name + " CRIT CHANGE WAITING FOR GO AHEAD")
+                            self._on_criticality_change()
+                            print("Job "+self.name + " Crit change waiting for go ahead")
                             self._on_self_preempted()
                             self.interruptReset()
                             break

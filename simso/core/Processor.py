@@ -74,6 +74,9 @@ class Processor(Process):
                                      sim=model)
         self._speed = proc_info.speed
 
+        # Criticality change signal job
+        self.change_job = None
+
     def resched(self):
         """
         Add a resched event to the list of events to handle.
@@ -92,7 +95,8 @@ class Processor(Process):
         self._evts.append((PREEMPT,))
         self._running = job
 
-    def criticality_signal(self):
+    def criticality_signal(self, change_job):
+        self.change_job = change_job
         self._evts.append((CRIT_SIGNAL,))
 
     def timer(self, timer):
@@ -174,7 +178,7 @@ class Processor(Process):
 
             evt = self._evts.popleft()
             if evt[0] == CRIT_SIGNAL:
-                self.sched.criticality_change()
+                self.sched.criticality_change_signal(self.change_job)
 
             if evt[0] == RESCHED:
                 if any(x[0] != RESCHED for x in self._evts):
