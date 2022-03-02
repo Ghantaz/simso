@@ -55,7 +55,8 @@ class Job(Process):
 
         # Scheduler has updated the wcet and has determined 
         # criticality change will take place due to this job
-        self.impending_up_level = False
+        # IF SET TO TRUE THEN SEQUENCE IS NOT MAINTAINED
+        self.impending_up_level = True
 
         self._on_activate()
 
