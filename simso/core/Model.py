@@ -48,6 +48,7 @@ class Model(Simulation):
         # Suicide stuff
         self.attacker_suicide_level = configuration.attacker_suicide_level
         self.enable_suicide = configuration.enable_suicide
+        self.new_job_attack_cost_multiplier = configuration.new_job_attack_cost_multiplier
 
         # Target system criticality level for success
         self.target_criticality_level = configuration.target_criticality_level

@@ -51,8 +51,11 @@ class Job(Process):
 
         # Allow applying attack. Set to True on preempt. 
         # Made False the first time an attack takes place
-        # SET TO TRUE TO NOT IMPOSE SEQUENCE
-        self.apply_attack = True
+        self.apply_attack = False
+
+        # Allow attack when first arrives. Only allowed once
+        # Set to True to apply attack when job released and not yet executed
+        self.apply_first_attack=True
 
         # Scheduler has updated the wcet and has determined 
         # criticality change will take place due to this job
@@ -75,6 +78,10 @@ class Job(Process):
 
     def _on_execute(self):
         self._last_exec = self.sim.now()
+        
+        # Ensure that the first attack is no more possible
+        # Since the job is beginning to execute
+        self.apply_first_attack = False
 
         self._etm.on_execute(self)
         if self._is_preempted:

@@ -78,6 +78,7 @@ class Configuration(object):
         
         # Attack related stuff
         self.attack_cost_multiplier = 0
+        self.new_job_attack_cost_multiplier = 0
         self.attacker_suicide_level = 0
         self.enable_suicide = False
 
