@@ -51,12 +51,12 @@ class Job(Process):
 
         # Allow applying attack. Set to True on preempt. 
         # Made False the first time an attack takes place
+        # SET TO TRUE TO NOT IMPOSE SEQUENCE
         self.apply_attack = False
 
         # Scheduler has updated the wcet and has determined 
         # criticality change will take place due to this job
-        # IF SET TO TRUE THEN SEQUENCE IS NOT MAINTAINED
-        self.impending_up_level = True
+        self.impending_up_level = False
 
         self._on_activate()
 
