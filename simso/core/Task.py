@@ -8,6 +8,7 @@ from .CSDP import CSDP
 
 import os
 import os.path
+import random
 
 
 class TaskInfo(object):
@@ -325,6 +326,25 @@ class PTask(GenericTask):
             #print self.sim.now(), "activate", self.name
             self.create_job()
             yield hold, self, int(self.period * self._sim.cycles_per_ms)
+
+class SporadicTask_True(GenericTask):
+    """
+    Sporadic Task like the generic SporadicTask process. Inherits from :class:`GenericTask`.
+    The jobs are created after random intervals ranging from minimum 
+    inter-arrival time (period) to 3 times period.
+    """
+    fields = ['activation_date', 'period', 'deadline', 'wcet']
+
+    def execute(self):
+        # wait the activation date.
+        yield hold, self, int(self._task_info.activation_date *
+                              self._sim.cycles_per_ms)
+
+        while True:
+            #print self.sim.now(), "activate", self.name
+            self.create_job()
+            hold_time = random.randint(self.period, 3*self.period - 1)
+            yield hold, self, int(hold_time * self._sim.cycles_per_ms)
 
 
 class SporadicTask(GenericTask):
