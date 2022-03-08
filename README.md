@@ -1,4 +1,4 @@
-# SimSo - Simulation of Multiprocessor Scheduling with Overheads
+# SimSo - Simulation of Multiprocessor Scheduling with Overheads (MODIFIED)
 
 NOTE: This is a highly modified version of SimSo for internal testing. Please refer to the project website below for original source. 
 
