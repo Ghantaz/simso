@@ -56,6 +56,10 @@ class Model(Simulation):
         # Attack pass flag 
         self.passed_test = False
 
+        # Additional record options
+        self.record_earliest_successful_job = configuration.record_earliest_successful_job
+        self.recorded_job = None
+
         try:
             self._etm = execution_time_models[configuration.etm](
                 self, len(proc_info_list)

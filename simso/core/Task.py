@@ -336,6 +336,7 @@ class SporadicTask_True(GenericTask):
     fields = ['activation_date', 'period', 'deadline', 'wcet']
 
     def execute(self):
+        self._init()
         # wait the activation date.
         yield hold, self, int(self._task_info.activation_date *
                               self._sim.cycles_per_ms)
@@ -370,10 +371,11 @@ class SporadicTask(GenericTask):
 task_types = {
     "Periodic": PTask,
     "APeriodic": ATask,
-    "Sporadic": SporadicTask
+    "Sporadic": SporadicTask,
+    "SporadicTrue" : SporadicTask_True
 }
 
-task_types_names = ["Periodic", "APeriodic", "Sporadic"]
+task_types_names = ["Periodic", "APeriodic", "Sporadic", "SporadicTrue"]
 
 
 def Task(sim, task_info):

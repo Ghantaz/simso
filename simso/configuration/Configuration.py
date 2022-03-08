@@ -89,6 +89,9 @@ class Configuration(object):
         self.calc_penalty_cache()
         self._set_filename(filename)
 
+        # Additional record options for simulations
+        self.record_earliest_successful_job = False
+
     def _set_filename(self, filename):
         self._simulation_file = filename
         if filename:
