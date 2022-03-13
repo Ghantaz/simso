@@ -85,6 +85,9 @@ class Configuration(object):
         # Add average exec time multiplier
         self.average_exec_ratio = 1
         self.target_criticality_level = 0
+
+        # Support mitigation strategy - will be utilized by the scheduler
+        self.mitigation_degrade_attacker = False
             
         self.calc_penalty_cache()
         self._set_filename(filename)

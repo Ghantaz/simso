@@ -60,6 +60,9 @@ class Model(Simulation):
         self.record_earliest_successful_job = configuration.record_earliest_successful_job
         self.recorded_job = None
 
+        # Mitigation strategy 
+        self.mitigation_degrade_attacker = configuration.mitigation_degrade_attacker
+
         try:
             self._etm = execution_time_models[configuration.etm](
                 self, len(proc_info_list)
